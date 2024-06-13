@@ -95,7 +95,7 @@ export async function POST(req: Request) {
     }
     
     const iden = await GetidByclerk(id)
-    console.log(`the id is ${JSON.stringify(iden)}`);
+    console.log(`the id is ${JSON.stringify(iden.clerkId)}`);
     // const updatedUser = await UpdateUser(id, user);
     
 
