@@ -6,6 +6,8 @@ import { clerkClient } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 import { getAuth } from '@clerk/nextjs/server'
 import { NextRequest } from 'next/server'
+import { get } from 'http'
+import { GetidByclerk } from '@/lib/actions/user.actions'
  
 export async function POST(req: Request) {
  
@@ -91,11 +93,14 @@ export async function POST(req: Request) {
       lastName: last_name!,
 
     }
-    console.log(`the id is ${id} and the user is ${user}`)
-    const updatedUser = await UpdateUser(id, user);
+    
+    const iden = GetidByclerk(id)
+    console.log(`the id is ${iden} `)
+    // const updatedUser = await UpdateUser(id, user);
+    
 
 
-    return NextResponse.json({ message: 'OK', user: updatedUser })
+    return NextResponse.json({ message: 'OK', user: iden })
 
 
    

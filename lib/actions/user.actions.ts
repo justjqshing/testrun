@@ -56,3 +56,14 @@ export async function UpdateUser(id: string, user: CreateUserParams) {
     return
   }
 }
+export async function GetidByclerk(id: string) {
+  try {
+    await connectToDatabase()
+
+    const Users = await User.find({ clerkId: id })
+    return JSON.parse(JSON.stringify(Users))
+  } catch (error) {
+    console.error(error)
+    return
+  }
+}
