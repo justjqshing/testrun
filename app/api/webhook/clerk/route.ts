@@ -95,12 +95,12 @@ export async function POST(req: Request) {
     }
     
     const iden = await GetidByclerk(id)
-    console.log(`the id is ${(iden[0].clerkId)}`);
-    // const updatedUser = await UpdateUser(id, user);
+
+    const updatedUser = await UpdateUser(iden[0].clerkId, user);
     
 
 
-    return NextResponse.json({ message: 'OK', user: iden })
+    return NextResponse.json({ message: 'OK', user: updatedUser })
 
 
    
