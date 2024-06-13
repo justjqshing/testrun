@@ -10,6 +10,7 @@ clerkId: string
   lastName: string
   username: string
   email: string
+  Image: string
 }
 export async function createUser(user: CreateUserParams) {
   try {
