@@ -8,7 +8,7 @@ import { getAuth } from '@clerk/nextjs/server'
 import { NextRequest } from 'next/server'
 import { get } from 'http'
 import { GetidByclerk } from '@/lib/actions/user.actions'
- 
+import { deleteUser } from '@/lib/actions/user.actions'
 export async function POST(req: Request) {
  
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the webhook
@@ -107,36 +107,13 @@ export async function POST(req: Request) {
    
 
   }
-}
+  if(eventType === 'user.deleted') {
+    const { id } = evt.data;
 
-export async function GET(request: NextRequest) {
-  const { userId: clerkUserId } = getAuth(request); // Get Clerk's user ID
-
-  if (!clerkUserId) {
-    return NextResponse.json(
-      { message: "User not authenticated" },
-      { status: 401 } // Unauthorized
-    );
-  }
-
-  try {
-    // Fetch user session from Clerk
-    const user = await clerkClient.users.getUser(clerkUserId);
-    const userId = user.publicMetadata.userId; // Get your app's user ID
-
-    if (!userId) {
-      return NextResponse.json(
-        { message: "User ID not found in Clerk metadata" },
-        { status: 404 } // Not Found
-      );
+    if (id) {
+      const deleted = await deleteUser(id)
     }
 
-    return NextResponse.json({ userId });
-  } catch (error) {
-    console.error("Error fetching user from Clerk:", error);
-    return NextResponse.json(
-      { message: "Internal server error" },
-      { status: 500 } 
-    );
+    return NextResponse.json({ message: 'OK'})
   }
 }

@@ -68,3 +68,14 @@ export async function GetidByclerk(id: string) {
     return
   }
 }
+export async function deleteUser(id: string) {
+  try {
+    await connectToDatabase()
+
+    const Users = await User.findOneAndDelete({ clerkId: id })
+    return JSON.parse(JSON.stringify(Users))
+  } catch (error) {
+    console.error(error)
+    return
+  }
+}
