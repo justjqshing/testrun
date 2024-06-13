@@ -49,7 +49,7 @@ export async function UpdateUser(id: string, user: CreateUserParams) {
   try {
     await connectToDatabase()
 
-    const Users = await User.findByIdAndUpdate(id, user)
+    const Users = await User.findOneAndUpdate({ clerkId: id}, user)
     return JSON.parse(JSON.stringify(Users))
   } catch (error) {
     console.error(error)
