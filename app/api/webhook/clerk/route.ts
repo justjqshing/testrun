@@ -96,7 +96,7 @@ export async function POST(req: Request) {
     
     const iden = await GetidByclerk(id)
 
-    const updatedUser = await UpdateUser(iden[0].clerkId, user);
+    const updatedUser = await UpdateUser(iden[0]._id, user);
     
 
 
