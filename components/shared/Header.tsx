@@ -1,13 +1,17 @@
 
+
 import { SignedIn, SignedOut, UserButton, useUser } from '@clerk/nextjs'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 import { Button } from '../ui/button'
-
+import GetUsers from './getUsers'
 import { auth } from '@clerk/nextjs/server'
 
 const Header = () => {
+    const { sessionClaims } = auth()
+
+    const userid = sessionClaims?.userId as string
 
   return (
     <header className="w-full border-b p-3">
@@ -28,10 +32,10 @@ const Header = () => {
                 </SignedOut>
                 <SignedIn>
                     <UserButton afterSignOutUrl='/'/>
-
-                    
                 </SignedIn>
+                
             </div>
+            <GetUsers userId={userid}/>
 
         </div>
     </header>

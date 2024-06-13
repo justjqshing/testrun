@@ -33,3 +33,26 @@ export async function FindAllUsers() {
       return
     }
   }
+
+export async function GetuserbyID() {
+    try {
+      await connectToDatabase()
+  
+      const Users = await User.find({ firstName: 'Josh' })
+      return JSON.parse(JSON.stringify(Users))
+    } catch (error) {
+      console.error(error)
+      return
+    }
+  }
+export async function UpdateUser(id: string, user: CreateUserParams) {
+  try {
+    await connectToDatabase()
+
+    const Users = await User.findByIdAndUpdate(id, user)
+    return JSON.parse(JSON.stringify(Users))
+  } catch (error) {
+    console.error(error)
+    return
+  }
+}
