@@ -94,7 +94,7 @@ export async function POST(req: Request) {
 
     }
     
-    const iden = GetidByclerk(id)
+    const iden = await GetidByclerk(id)
     console.log(`the id is ${iden} `)
     // const updatedUser = await UpdateUser(id, user);
     
