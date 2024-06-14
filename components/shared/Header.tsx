@@ -14,7 +14,7 @@ const Header = () => {
     const userid = sessionClaims?.userId as string
 
   return (
-    <header className="w-full border-b p-3">
+    <header className="w-full border-b p-3 absolute z-[9999]">
         <div className='wrapper flex items-center justify-between'>
             <Link href='/' className='w-36'>
                 <Image src='/next.svg' width={128} height={38} alt='Evently Logo'/>
@@ -35,7 +35,6 @@ const Header = () => {
                 </SignedIn>
                 
             </div>
-            <GetUsers userId={userid}/>
 
         </div>
     </header>

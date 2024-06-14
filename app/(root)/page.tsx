@@ -10,11 +10,12 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link";
 import Image from "next/image";
 import Header from '@/components/shared/Header';
+import { Hero } from '@/components/shared/Hero';
 
 export default function Home() {
   return (
-    <main className='p-6'>
-     
+    <main className=''>
+     <Hero/>
     </main>
   );
 }
