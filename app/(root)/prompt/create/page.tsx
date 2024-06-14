@@ -13,6 +13,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { CreatePrompt } from "@/lib/actions/prompt.actions"
 const page = () => {
   const formSchema = z.object({
     username: z.string().min(2).max(50),
@@ -26,9 +27,9 @@ const page = () => {
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
 
-    console.log(values)
+    await CreatePrompt(values)
   }
   return (
     <div className="w-full h-full flex justify-center items-center">
