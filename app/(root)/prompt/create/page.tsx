@@ -1,77 +1,12 @@
-'use client'
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { Button } from "@/components/ui/button"
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { CreatePrompt } from "@/lib/actions/prompt.actions"
+import PromptForm from '@/components/shared/Form'
+import React from 'react'
+import { auth } from '@clerk/nextjs/server'
 const page = () => {
-  const formSchema = z.object({
-    username: z.string().min(2).max(50),
-    email: z.string().email(),
-  })
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      username: "",
-      email: "",
-    },
-  })
+  const { sessionClaims } = auth()
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-
-    await CreatePrompt(values)
-  }
+    const userid = sessionClaims?.userId as string
   return (
-    <div className="w-full h-full flex justify-center items-center">
-
-     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input placeholder="shadcn" {...field} />
-              </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-         <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input placeholder="shadcn" {...field} />
-              </FormControl>
-              <FormDescription>
-                This is your Email, It is not public.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit">Submit</Button>
-      </form>
-    </Form>
-    </div>
+    <PromptForm userId={userid}/>
   )
 }
 

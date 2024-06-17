@@ -1,9 +1,12 @@
 import { Schema, models, model } from 'mongoose'
 const PromptSchema = new Schema({
-    email: { type: String, required: true, unique: true },
-    username: { type: String, required: true, unique: true },
+    title: { type: String, required: true },
+    prompt: { type: String, required: true },
+    description: { type: String, required: true },
+    tags: { type: Array, required: false },
+    organizer: { type: Schema.Types.ObjectId, ref: 'User' },
   })
 
-const Prompt = models.user || model('user', PromptSchema)
+const Prompt = models.prompts || model('prompts', PromptSchema)
 
 export default Prompt

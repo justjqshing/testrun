@@ -5,6 +5,7 @@ import { Button } from '../ui/button'
 import { FindAllUsers, GetuserbyID } from '@/lib/actions/user.actions'
 import { useState } from 'react'
 import { set } from 'mongoose'
+import { createPrompt } from '@/lib/actions/prompt.actions'
 
 const GetUsers = ({userId}: any) => {
     const [Users, setUsers] = useState([])
@@ -25,18 +26,7 @@ const GetUsers = ({userId}: any) => {
     }, [Users])
   return (
     <div>
-        <Button  variant='outline' className='text-black ' onClick={() => handleClick()} > Users</Button>
-        {Users.map((user) => (
-          <div>
-            <h1 className={`${user._id === userId ? 'text-green-600' : ''}`}>{user.firstName}</h1>
-            <h1 className={`${user._id === userId ? 'text-green-600' : ''}`}>{user._id}</h1>
-            <h1 className={`${user._id === userId ? 'text-green-600' : ''}`}>{userId}</h1>
-            </div>
-          
-          
-
-        ))}
-       
+       <Button variant='outline' className='rounded-full' size='lg' onClick={async() => await createPrompt()}></Button>
         </div>
 
   )

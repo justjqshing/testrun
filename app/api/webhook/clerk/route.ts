@@ -9,6 +9,7 @@ import { NextRequest } from 'next/server'
 import { get } from 'http'
 import { GetidByclerk } from '@/lib/actions/user.actions'
 import { deleteUser } from '@/lib/actions/user.actions'
+
 export async function POST(req: Request) {
  
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the webhook

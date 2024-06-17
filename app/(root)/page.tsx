@@ -1,4 +1,4 @@
-
+'use client'
 import {
   ClerkProvider,
   SignInButton,
@@ -11,11 +11,23 @@ import Link from "next/link";
 import Image from "next/image";
 import Header from '@/components/shared/Header';
 import { Hero } from '@/components/shared/Hero';
+import { useEffect } from 'react';
+type SearchParamProps = {
+  params: {
+      id: string;
+  };
+  searchParams: {
+      [key: string]: string | undefined;
+  };
+}
+export default function Home({ searchParams }: SearchParamProps) {
+  const searchText = (searchParams?.query as string) || '';
+  const TagText = (searchParams?.tag as string) || '';
+  useEffect(() => {  console.log(TagText)}, [searchText, TagText]);
 
-export default function Home() {
   return (
     <main className=''>
-     <Hero/>
+     <Hero Query={searchText} Tag={TagText}/>
     </main>
   );
 }
