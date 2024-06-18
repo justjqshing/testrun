@@ -91,7 +91,7 @@ const PromptForm = ({ userId, promptDetails, type, promptID }: PromptFormProps) 
   }
 
   return (
-    <div className="w-full h-full flex justify-center items-center relative">
+    <div className="w-full h-full flex justify-center items-center relative mt-16">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField

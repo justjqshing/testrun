@@ -8,7 +8,8 @@ import {
   SignedOut,
   UserButton
 } from '@clerk/nextjs'
-
+import { HeroHighlight} from '../components/ui/Hero-Bg'
+import { ThemeProvider } from "./theme-provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -24,7 +25,19 @@ export default function RootLayout({
   return (
     <ClerkProvider>
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={`${inter.className} bg-white dark:bg-[#121212] bg-opacity-100`} >
+        
+      <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
+          >
+
+          {children}
+
+        </ThemeProvider>
+      </body>
     </html>
     </ClerkProvider>
   );

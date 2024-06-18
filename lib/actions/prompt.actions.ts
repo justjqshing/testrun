@@ -85,8 +85,10 @@ export async function getPromptById(id: string) {
 type SearchProps = {
   Query: string
   Tag: string
+  Limit: number
+  page: number
 }
-export async function getAllPrompts({Query, Tag}: SearchProps) {
+export async function getAllPrompts({Query, Tag, Limit, page}: SearchProps) {
   try {
     await connectToDatabase()
     
@@ -98,13 +100,19 @@ export async function getAllPrompts({Query, Tag}: SearchProps) {
 
     const titleCondition = Query ? { title: { $regex: new RegExp(Query, 'i') } } : {}
     const tagsCondition = Tag ? { tags: { $regex: new RegExp(Tag, 'i') } } : {}
+    const skipAmount = (Number(page) - 1) * Limit
 
     const conditions = {
       $and: [tagsCondition, titleCondition],
     }
 
-    const Prompts = await Prompt.find(conditions).populate({ path: 'organizer', model: User, select: '_id firstName lastName username Image' })
-    return JSON.parse(JSON.stringify(Prompts))
+    const Prompts = await Prompt.find(conditions).populate({ path: 'organizer', model: User, select: '_id firstName lastName username Image' }).limit(Limit).skip(skipAmount)
+
+    const PromptCount = await Prompt.countDocuments(conditions)
+    return{
+      data: JSON.parse(JSON.stringify(Prompts)),
+      totalPages: Math.ceil(PromptCount / Limit)
+    } 
   } catch (error) {
     
   }

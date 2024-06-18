@@ -10,42 +10,38 @@ import { auth } from '@clerk/nextjs/server'
 import { createPrompt } from '@/lib/actions/prompt.actions'
 
 const Header = () => {
-    const { sessionClaims } = auth()
 
-    const userid = sessionClaims?.userId as string
 
-  return (
-    <header className="w-full border-b p-3 absolute z-[9999] bg-white">
-        <div className='wrapper flex items-center justify-between'>
+    return (
+        <header className="w-[100vw] absolute border-b p-3 z-[9999] bg-white dark:bg-black dark:bg-opacity-80 max-sm:px-4">
+          <div className='wrapper flex items-center justify-between'>
             <Link href='/' className='w-36'>
-                <Image src='/next.svg' width={128} height={38} alt='Evently Logo'/>
+              <Image src='/next.svg' width={128} height={38} alt='Evently Logo' className='dark:hidden'/>
+              <Image src='/next-dark.svg' width={128} height={38} alt='Evently Logo' className='hidden dark:flex'/>
             </Link>
             <SignedIn>
-                <nav className='md:flex-between  hidden w-full max-w-xs'>
-               
-                </nav>
+              <nav className='hidden md:flex w-full max-w-xs justify-start'>
+                {/* Add your nav items here */}
+              </nav>
             </SignedIn>
             <div className='flex w-32 justify-end gap-3'>
-                <SignedOut>
-                    <Button asChild className='rounded-full' size='lg'>
-                        <Link href='/sign-in'>Sign In</Link>
-                    </Button>
-                </SignedOut>
-                <SignedIn>
-                    <Button asChild className='rounded-full' size='lg'>
-                        <Link href='/prompt/create'>Create Prompt</Link>
-                    </Button>
-                </SignedIn>
-                <SignedIn>
-                    <UserButton afterSignOutUrl='/'/>
-                </SignedIn>
-                
+              <SignedOut>
+                <Button asChild className='rounded-full' size='lg'>
+                  <Link href='/sign-in'>Sign In</Link>
+                </Button>
+              </SignedOut>
+              <SignedIn>
+                <Button asChild variant='outline' className='rounded-full' size='lg'>
+                  <Link href='/prompt/create'>Create Prompt</Link>
+                </Button>
+              </SignedIn>
+              <SignedIn>
+                <UserButton afterSignOutUrl='/'/>
+              </SignedIn>
             </div>
-            
-
-        </div>
-    </header>
-  )
+          </div>
+        </header>
+      )
 }
 
 export default Header

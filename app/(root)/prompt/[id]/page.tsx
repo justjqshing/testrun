@@ -7,7 +7,7 @@ const page = async ({ params: { id }, searchParams }: any) => {
 
 
   return (
-    <div>
+    <div className="h-full flex justify-center items-center">
       {[prompt].map((element: any) => {
         return (
           <div key={element._id} className="flex flex-col w-full h-screen justify-center items-center">
