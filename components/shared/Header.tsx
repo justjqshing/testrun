@@ -14,7 +14,7 @@ const Header = () => {
 
     return (
         <header className="w-[100vw] absolute border-b p-3 z-[9999] bg-white dark:bg-black dark:bg-opacity-80 max-sm:px-4">
-          <div className='wrapper flex items-center justify-between'>
+          <div className=' flex items-center justify-between px-3'>
             <Link href='/' className='w-36'>
               <Image src='/next.svg' width={128} height={38} alt='Evently Logo' className='dark:hidden'/>
               <Image src='/next-dark.svg' width={128} height={38} alt='Evently Logo' className='hidden dark:flex'/>
