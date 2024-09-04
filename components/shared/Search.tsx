@@ -34,8 +34,8 @@ const Search = ({reset, setReset, defaultVal}: any) => {
       };
   return (
     <div className='flex justify-center items-center min-h-[54px] overflow-hidden rounded-full bg-gray-50 dark:bg-zinc-800 px-4 py-2 flex-1 '>
-      <Image src='/assets/icons/Search.svg' width={24} height={24} alt='search icon' className='dark:hidden'/>
-      <Image src='/assets/icons/Dark-Search.svg' width={24} height={24} alt='search icon' className='hidden dark:block'/>
+      <Image src={'/assets/Icons/Disliked.svg'} width={24} height={24} alt='search icon' className='dark:hidden'/>
+      <Image src={'/assets/Icons/Disliked.svg'} width={24} height={24} alt='search icon' className='hidden dark:block'/>
       <Input
         type="text"
         placeholder='Search Events...'
