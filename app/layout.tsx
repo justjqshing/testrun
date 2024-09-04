@@ -10,6 +10,7 @@ import {
 } from '@clerk/nextjs'
 import { HeroHighlight} from '../components/ui/Hero-Bg'
 import { ThemeProvider } from "./theme-provider";
+import { dark } from '@clerk/themes';
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -23,7 +24,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
+    <ClerkProvider
+    appearance={{
+      baseTheme: dark,
+      elements: {
+        formButtonPrimary:
+            'bg-black text-white hover:text-slate-800',
+      }
+    }}
+    >
     <html lang="en">
       <body className={`${inter.className} bg-white dark:bg-[#121212] bg-opacity-100`} >
         

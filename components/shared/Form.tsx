@@ -31,6 +31,7 @@ const PromptForm = ({ userId, promptDetails, type, promptID }: PromptFormProps) 
   const router = useRouter();
   const initialVlues = type === "Update" ? {...promptDetails} : {title: "", prompt: "", description: "", tags: []};
   const [tags, setTags] = useState<string[]>([])
+  const [formSubmitted, setFormSubmitted] = useState(false);
     const [inputValue, setInputValue] = useState('') // Step 1: Track the input value
 
     const HandleChange = () => {
@@ -47,34 +48,43 @@ const PromptForm = ({ userId, promptDetails, type, promptID }: PromptFormProps) 
         setTags(newTags);
       }
     }
-    useEffect(() => {
-      setTags(initialVlues.tags)
-    }, [])
-  const formSchema = type === 'Update' ?  z.object({
-    title: z.string().min(2).max(50),
-    prompt: z.string().refine(async (data) => await checkForDuplicatePrompt({data, type, promptID}), {
+    const formSchema = type === 'Update' ? z.object({
+      title: z.string().min(2).max(50),
+      prompt: z.string().refine(async (data) => await checkForDuplicatePrompt({ data, type, promptID }), {
         message: "We are Sure you made an AMAZING Prompt, but it already exists! Display another piece of creativity!",
       }),
-    description: z.string().min(2, "Description is too short"),
-    tags: z.array(z.string())
-  }) :  z.object({
-    title: z.string().min(2).max(50),
-    prompt: z.string().refine(async (data) => await checkForDuplicatePrompt({data}), {
-      message: "We are Sure you made an AMAZING Prompt, but it already exists! Display another piece of creativity!",
-    }),
-    description: z.string().min(2, "Description is too short"),
-    tags: z.array(z.string())
-  });
+      description: z.string().min(2, "Description is too short"),
+      tags: z.array(z.string())
+    }) : z.object({
+      title: z.string().min(2).max(50),
+      prompt: z.string().refine(async (data) => await checkForDuplicatePrompt({ data }), {
+        message: "We are Sure you made an AMAZING Prompt, but it already exists! Display another piece of creativity!",
+      }),
+      description: z.string().min(2, "Description is too short"),
+      tags: z.array(z.string()).refine(() => tags.length > 0, {
+        message: "Must Have at least 1 tag"
+      })
+    });
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: initialVlues
-  });
+    useEffect(() => {
+      if (formSubmitted) {
+        form.trigger("tags")  
+      }
+
+    }, [tags, formSubmitted])
+  
+    const form = useForm<z.infer<typeof formSchema>>({
+      resolver: zodResolver(formSchema),
+      defaultValues: initialVlues
+    });
+  
+    useEffect(() => {
+      setTags(initialVlues.tags);
+    }, []);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    values.tags = tags
+      values.tags = tags
 
-    console.log(values)
 
     if (type === "Update") {
       const updatedPrompt = await UpdatePrompt({ promptID: promptID, values: { ...values }});
@@ -190,7 +200,7 @@ const PromptForm = ({ userId, promptDetails, type, promptID }: PromptFormProps) 
             )}
           />
           <div className="w-full flex justify-end ">
-            <Button type="submit">Submit</Button>
+            <Button type="submit" onClick={() => setFormSubmitted(true)}>Submit</Button>
           </div>
         </form>
       </Form>

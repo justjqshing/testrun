@@ -1,4 +1,3 @@
-
 'use client';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
@@ -15,9 +14,22 @@ const Pagination = ({ page, totalPages, limit }: PaginationProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [paramPage, setParamPage] = useState(Number(searchParams.get('page') || 1));
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    console.log(totalPages)
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 400);
+    };
+
+    handleResize(); // Set initial value
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  useEffect(() => {
     if (totalPages > 0 && (paramPage < 1 || paramPage > totalPages || limit == 1 && paramPage > totalPages)) {
       const newUrl = formUrlQuery({
         params: searchParams.toString(),
@@ -29,27 +41,25 @@ const Pagination = ({ page, totalPages, limit }: PaginationProps) => {
     }
   }, [totalPages, paramPage]);
 
-
   const visiblePages = [];
   const midPoint = 1; 
   let startPage = Math.max(1, paramPage - midPoint);
-  let endPage = startPage + 2;
+  let endPage = startPage + (isMobile ? 1 : 2);
 
-
-  if (startPage === 1 && totalPages > 3) {
-    endPage = 3; 
+  if (startPage === 1 && totalPages > 3) { 
+    // No adjustment needed
   } else if (endPage > totalPages) {
     if (totalPages == 2) {
       startPage = totalPages - 1;
     } else if(totalPages == 1) {
-    startPage = totalPages;
+      startPage = totalPages;
     } else {
-        startPage = totalPages - 2;
+      startPage = totalPages - (isMobile ? 1 : 2);
     }
     endPage = totalPages;
   }
 
-  for (let i = startPage; i <= endPage; i++) {
+  for (let i = startPage; i <= endPage && i <= totalPages; i++) {
     visiblePages.push(i);
   }
 
@@ -65,8 +75,8 @@ const Pagination = ({ page, totalPages, limit }: PaginationProps) => {
 
   return (
     <div className="flex items-center gap-5 mb-10">
-        <div className='bg-green-200'>
-        </div>
+      <div className='bg-green-200'>
+      </div>
       {/* Previous Button */}
       <Button
         size="lg"

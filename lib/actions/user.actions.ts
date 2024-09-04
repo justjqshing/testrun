@@ -35,17 +35,7 @@ export async function FindAllUsers() {
     }
   }
 
-export async function GetuserbyID() {
-    try {
-      await connectToDatabase()
-  
-      const Users = await User.find({ firstName: 'Josh' })
-      return JSON.parse(JSON.stringify(Users))
-    } catch (error) {
-      console.error(error)
-      return
-    }
-  }
+
 export async function UpdateUser(id: string, user: CreateUserParams) {
   try {
     await connectToDatabase()
@@ -57,8 +47,10 @@ export async function UpdateUser(id: string, user: CreateUserParams) {
     return
   }
 }
-export async function GetidByclerk(id: string) {
+export async function GetidByclerk(id: any) {
+
   try {
+    console.log('NEW YORKKKKKKK')
     await connectToDatabase()
 
     const Users = await User.find({ clerkId: id })

@@ -3,6 +3,8 @@ import Search from "@/components/shared/Search"
 import { connectToDatabase } from "@/database"
 import Prompt from "@/database/models/prompt.model"
 import User from "@/database/models/user.model"
+import Comment from "@/database/models/comment.model"
+import { json } from "stream/consumers"
 type CreateUserParams = {
   userId?: string
   promptID?: string
@@ -20,8 +22,8 @@ export async function createPrompt({values , userId}: CreateUserParams) {
     try {
       await connectToDatabase()
   
-      const newUser = await Prompt.create({...values, organizer: userId})
-      return JSON.parse(JSON.stringify(newUser))
+      const newPrompt = await Prompt.create({...values, organizer: userId, createdAt: new Date(), likes: 0, likedBy: [], dislikes: 0, dislikedBy: [], comments: []})
+      return JSON.parse(JSON.stringify(newPrompt))
     } catch (error) {
       console.error(error)
       return
@@ -75,7 +77,11 @@ export async function getPromptById(id: string) {
     try {
       await connectToDatabase()
   
-      const prompt = await Prompt.findById(id).populate({ path: 'organizer', model: User, select: '_id firstName lastName' })
+      const prompt = await Prompt.findById(id)
+      .populate({ path: 'organizer', model: User, select: '_id firstName lastName' })
+      .populate({ path: 'comments', model: Comment, select: '_id comment Creator', populate: { path: 'Creator', model: User, select: '_id firstName lastName username Image' } })
+      
+      .exec();
       return JSON.parse(JSON.stringify(prompt))
     } catch (error) {
       console.error(error)
@@ -87,33 +93,121 @@ type SearchProps = {
   Tag: string
   Limit: number
   page: number
+  order: any
 }
-export async function getAllPrompts({Query, Tag, Limit, page}: SearchProps) {
+export async function getAllPrompts({ Query, Tag, Limit, page, order }: SearchProps) {
   try {
-    await connectToDatabase()
-    
-    console.log(Query)
-    if(Tag.startsWith('#')) {
-      Tag = Tag.slice(1)
-    }
-    console.log('Tag', Tag)
+    await connectToDatabase();
 
-    const titleCondition = Query ? { title: { $regex: new RegExp(Query, 'i') } } : {}
-    const tagsCondition = Tag ? { tags: { $regex: new RegExp(Tag, 'i') } } : {}
-    const skipAmount = (Number(page) - 1) * Limit
+    if (Tag.startsWith('#')) {
+      Tag = Tag.slice(1);
+    }
+
+    const titleCondition = Query ? { title: { $regex: new RegExp(Query, 'i') } } : {};
+    const tagsCondition = Tag ? { tags: { $regex: new RegExp(Tag, 'i') } } : {};
+    const skipAmount = (Number(page) - 1) * Limit;
 
     const conditions = {
       $and: [tagsCondition, titleCondition],
+    };
+
+
+    const [field, direction] = order.split(':');
+
+    const sortOrder = { [field]: parseInt(direction), dislikes: field === 'likes' && direction === '-1' ? 1 : -1 };
+
+
+    console.log(sortOrder)
+
+    const Prompts = await Prompt.find(conditions)
+      .populate({ path: 'organizer', model: User, select: '_id firstName lastName username Image' })
+
+      .limit(Limit)
+      .skip(skipAmount)
+      //@ts-ignore
+      .sort(sortOrder)
+
+    const PromptCount = await Prompt.countDocuments(conditions);
+    return {
+      data: JSON.parse(JSON.stringify(Prompts)),
+      totalPages: Math.ceil(PromptCount / Limit),
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      data: [],
+      totalPages: 0,
+    };
+  }
+}
+export async function LikePrompt({promptId, userId}: any) {
+  await connectToDatabase();
+  const prompt = await Prompt.findById(promptId);
+  if (!prompt.likedBy.includes(userId)) {
+    const like = await Prompt.findByIdAndUpdate(promptId, { $inc: { likes: 1 }, $push: { likedBy: userId } });
+    return JSON.parse(JSON.stringify(like));
+  }
+  
+
+}
+export async function DislikePrompt({promptId, userId}: any) {
+  await connectToDatabase();
+  const prompt = await Prompt.findById(promptId);
+  if (!prompt.dislikedBy.includes(userId)) {
+    const like = await Prompt.findByIdAndUpdate(promptId, { $inc: { dislikes: 1 }, $push: { dislikedBy: userId } });
+    return JSON.parse(JSON.stringify(like));
+  }
+}
+export async function UnlikePrompt({promptId, userId}: any) {
+  await connectToDatabase();
+  const prompt = await Prompt.findById(promptId);
+  if (prompt.likedBy.includes(userId)) {
+    const unlike = await Prompt.findByIdAndUpdate(promptId, { $inc: { likes: -1 }, $pull: { likedBy: userId } });
+    return JSON.parse(JSON.stringify(unlike));
+  }
+}
+export async function UnDislikePrompt({promptId, userId}: any) {
+  await connectToDatabase();
+  const prompt = await Prompt.findById(promptId);
+  if (prompt.dislikedBy.includes(userId)) {
+    const unlike = await Prompt.findByIdAndUpdate(promptId, { $inc: { dislikes: -1 }, $pull: { dislikedBy: userId } });
+    return JSON.parse(JSON.stringify(unlike));
+  }
+}
+type GetRelatedPromptsProps = {
+  tags: string
+  prompt: string
+}
+export async function GetRelatedPrompts({tags, prompt}: GetRelatedPromptsProps) {
+    try {
+      await connectToDatabase()
+      const prompts = await Prompt.find({tags: {$in: tags}, 
+      prompt: { $ne: prompt}}).limit(3).populate({ path: 'organizer', model: User, select: '_id firstName lastName username Image' })
+      .collation( {locale: 'en', strength: 1})
+      return JSON.parse(JSON.stringify(prompts))
+    } catch (error) {
+      console.error(error)
+      return
     }
 
-    const Prompts = await Prompt.find(conditions).populate({ path: 'organizer', model: User, select: '_id firstName lastName username Image' }).limit(Limit).skip(skipAmount)
-
-    const PromptCount = await Prompt.countDocuments(conditions)
-    return{
-      data: JSON.parse(JSON.stringify(Prompts)),
-      totalPages: Math.ceil(PromptCount / Limit)
-    } 
+}
+export async function addComment({promptId, commentId}: any) {
+  try {
+    await connectToDatabase()
+    const prompt = await Prompt.findByIdAndUpdate(promptId, { $push: { comments: commentId } })
+    return JSON.parse(JSON.stringify(prompt))
   } catch (error) {
-    
+    console.error(error)
+    return
+  }
+}
+export async function getComments(promptId: any) {
+  try {
+    await connectToDatabase()
+    const prompt = await Comment.find({prompt: promptId})
+    return JSON.parse(JSON.stringify(prompt))
+  } catch (error) {
+    console.error(error)
+    return
   }
 }

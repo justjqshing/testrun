@@ -11,33 +11,34 @@ import Pagination from "./Pagination"
 const Collecton = ({Query, Tag, UserId, page}: any) => {
   const searchParams = useSearchParams()
   const limit = searchParams.get('limit') || 3
-
+  const order = searchParams.get('order') || 'createdAt: -1'
   const [prompts, setPrompts] = useState([])
   const [totalPages, setTotalPages] = useState()
 
   useEffect(() => {
+    console.log(order)
     const fetchData = async () => {
 
 
-      const prompt = await getAllPrompts({Query: Query, Tag: Tag, Limit: limit, page: page})
+      const prompt = await getAllPrompts({Query: Query, Tag: Tag, Limit: limit, page: page, order: order})
 
       setPrompts(prompt?.data)
       setTotalPages(prompt?.totalPages)
 
     }
     fetchData()
-  }, [Query, Tag, limit, page])
+  }, [Query, Tag, limit, page, order])
 
   return (
     <div className='w-full mt-20'>
       <div className='w-full flex justify-center items-center'>
       <div className='md:min-w-[45vw] md:max-w-[45vw] px-5 flex justify-center items-center'>
-        <Filters Query={Query} Tag={Tag}/>
+        <Filters Query={Query} Tag={Tag} order={order}/>
       </div>
       </div>
 
 
-    <div className='grid md:grid-cols-2 sm:grid-cols-1 lg:grid-cols-3 gap-2 mt-8 justify-items-center'>
+    <div className='grid md:grid-cols-2 sm:grid-cols-1 lg:grid-cols-3 gap-2 mt-8 justify-items-center '>
 
       {prompts.map((prompt, index) => (
         prompt ? <Card key={prompt._id} prompt={prompt} UserId={UserId} Limit={limit} Index={index} totalPages={totalPages} /> : null
