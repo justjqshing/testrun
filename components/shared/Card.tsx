@@ -181,7 +181,7 @@ const Card = ({ prompt, UserId, Limit, Index, totalPages }: CardProps) => {
               <h1>{prompt.organizer.firstName}</h1>
               <div className=' h-10 w-5'>
                 <Link href={`/prompt/${prompt._id}/update`}>
-                  <Image src='/assets/icons/Edit.svg' width={20} height={20} alt='More Icon' className={`${UserId === prompt.organizer._id ? 'flex' : 'hidden'}`}></Image>
+                  <Image src='/assets/Icons/Edit.svg' width={20} height={20} alt='More Icon' className={`${UserId === prompt.organizer._id ? 'flex' : 'hidden'}`}></Image>
                 </Link>
               </div>
             </div>
