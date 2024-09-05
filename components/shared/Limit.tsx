@@ -37,7 +37,7 @@ const Limit = ({reset, setReset, defaultVal}: any) => {
       };
   return (
     <div className='flex justify-center items-center min-h-[54px] overflow-hidden rounded-full bg-gray-50 dark:bg-zinc-800 px-4 py-2 w-full '>
-      <Image src='/assets/icons/Search.svg' width={24} height={24} alt='search icon'/>
+      <Image src='/assets/Icons/Search.svg' width={24} height={24} alt='search icon'/>
       <Input
         type="text"
         placeholder='Amount Per Page...'
