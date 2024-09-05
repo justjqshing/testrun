@@ -91,9 +91,9 @@ const Filters = ({Query, Tag, order}: any) => {
         <Search reset={resetSearch} setReset={setResetSearch} defaultVal={Query}/>
         <Dialog>
           <DialogTrigger> 
-            <Image src='/assets/icons/filter.svg' width={36} height={36} alt='edit icon' className='bg-[#F5F5F5] dark:bg-zinc-800 rounded-full p-3 flex min-h-[54px] min-w-[54px] dark:hidden'/>
+            <Image src='/assets/Icons/filter.svg' width={36} height={36} alt='edit icon' className='bg-[#F5F5F5] dark:bg-zinc-800 rounded-full p-3 flex min-h-[54px] min-w-[54px] dark:hidden'/>
             <div className='dark:bg-zinc-800 rounded-full p-3 h-[54px] w-[54px] hidden dark:flex'>
-              <Image src='/assets/icons/Dark-Filter.svg' width={36} height={36} alt='edit icon' className='opacity-[67%]'/>
+              <Image src='/assets/Icons/Dark-Filter.svg' width={36} height={36} alt='edit icon' className='opacity-[67%]'/>
             </div>
           </DialogTrigger>
           <DialogContent>
@@ -119,19 +119,19 @@ const Filters = ({Query, Tag, order}: any) => {
       <div className='flex flex-row gap-4 max-sm:max-w-[300px] flex-wrap'>
         <div className={`bg-blue-600 flex px-4 mt-4 rounded-lg py-2 bg-opacity-80 w-fit gap-3 ${Query.length > 0 ? 'flex' : 'hidden'}`} onClick={() => QueryClick()}> 
           <span>{Query}</span>
-          <Image src='/assets/icons/Trash.svg' width={24} height={24} alt='Delete'/>
+          <Image src='/assets/Icons/Trash.svg' width={24} height={24} alt='Delete'/>
         </div>
         <div className={`bg-blue-600 flex px-4 mt-4 rounded-lg py-2 bg-opacity-80 w-fit gap-3 ${Tag.length > 0 ? 'flex' : 'hidden'}`} onClick={() => TagClick()}> 
           <span>{Tag.startsWith('#') ? Tag : `#${Tag}`}</span>
-          <Image src='/assets/icons/Trash.svg' width={24} height={24} alt='Delete'/>
+          <Image src='/assets/Icons/Trash.svg' width={24} height={24} alt='Delete'/>
         </div>
         <div className={`bg-blue-600 flex px-4 mt-4 rounded-lg py-2 bg-opacity-80 w-fit gap-3 ${LimitVal.length > 0 && LimitVal !== '3' ? 'flex' : 'hidden'}`} onClick={() => LimitClick()}> 
           <span>{LimitVal} Per Page</span>
-          <Image src='/assets/icons/Trash.svg' width={24} height={24} alt='Delete'/>
+          <Image src='/assets/Icons/Trash.svg' width={24} height={24} alt='Delete'/>
         </div>
         <div className={`bg-blue-600 flex px-4 mt-4 rounded-lg py-2 bg-opacity-80 w-fit gap-3 ${OrderVal.length > 0 ? 'flex' : 'hidden'}`} onClick={() => OrderClick()}> 
           <span>{OrderVal}</span>
-          <Image src='/assets/icons/Trash.svg' width={24} height={24} alt='Delete'/>
+          <Image src='/assets/Icons/Trash.svg' width={24} height={24} alt='Delete'/>
         </div>
       </div>
     </div>
