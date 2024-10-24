@@ -54,7 +54,9 @@ const PromptForm = ({ userId, promptDetails, type, promptID }: PromptFormProps) 
         message: "We are Sure you made an AMAZING Prompt, but it already exists! Display another piece of creativity!",
       }),
       description: z.string().min(2, "Description is too short"),
-      tags: z.array(z.string())
+      tags: z.array(z.string())).refine(() => tags.length > 0, {
+        message: "Must Have at least 1 tag"
+      })
     }) : z.object({
       title: z.string().min(2).max(50),
       prompt: z.string().refine(async (data) => await checkForDuplicatePrompt({ data }), {
